@@ -52,7 +52,32 @@ import System
 import System.Collections
 import System.Runtime.InteropServices as SRI
 from System import Console
-import SolidEdgeAssembly as SEAssembly
+# import SolidEdgeAssembly as SEAssembly
+from SolidEdgeAssembly.QueryScopeConstants import  seQueryScopeAllParts
+from SolidEdgeAssembly.QueryPropertyConstants import seQueryPropertyCategory
+from SolidEdgeAssembly.QueryPropertyConstants import seQueryPropertyCustom
+from SolidEdgeAssembly.QueryPropertyConstants import seQueryPropertyReference
+from SolidEdgeAssembly.QueryConditionConstants import seQueryConditionContains
+from SolidEdgeAssembly.QueryConditionConstants import seQueryConditionIsNot
+
+def create_query(queries, query_name, criterias=None, sub=True):
+    """Create a query in select tools panel.
+    """
+
+    # Add the query here:
+    query = queries.Add(query_name)
+    query.Scope = seQueryScopeAllParts
+    query.SearchSubassemblies = sub
+
+    # loop throught the criterias
+    for criteria in criterias:
+        query.AddCriteria(
+            criteria[0],
+            criteria[1],
+            criteria[2],
+            criteria[3],
+    )
+    print("[QUERY]: Created: {0:.<25}{1:.>25}".format(query_name, query.MatchesCount.ToString()))
 
 
 def main():
@@ -61,178 +86,99 @@ def main():
     print("part: %s\n" % asm.Name)
     assert asm.Type == 3, "This macro only works on .asm"
 
-    # Queries:
-    objQueries = asm.Queries
+    fasteners = False
+
+    # Hardware [PLATED.ZINC]
+    create_query(
+            asm.Queries,
+            "Hardware [PLATED.ZINC]",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "DSC_A", seQueryConditionContains , "ZINC PLATED"),
+            ]
+    )
+
+    # Hardware [SS]
+    create_query(
+            asm.Queries,
+            "Hardware [SS]",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "DSC_F", seQueryConditionContains , "SS.3"),
+            ]
+    )
+    # Hardware [SS.304]
+    create_query(
+            asm.Queries,
+            "Hardware [SS.304]",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "DSC_F", seQueryConditionContains , "[SS.304]"),
+            ]
+    )
+    # Hardware [SS.316]
+    create_query(
+            asm.Queries,
+            "Hardware [SS.316]",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "DSC_F", seQueryConditionContains , "[SS.316]"),
+            ]
+    )
+    # "Hardware INCH"
+    create_query(
+            asm.Queries,
+            "Hardware INCH",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "JDEPRP1", seQueryConditionIsNot , "Metric Fastener"),
+            ]
+    )
+    # "Hardware METRIC"
+    create_query(
+            asm.Queries,
+            "Hardware METRIC",
+            [
+                (seQueryPropertyCategory, "Category", seQueryConditionContains ,"HARDWARE"),
+                (seQueryPropertyCustom, "JDEPRP1", seQueryConditionContains , "Metric Fastener"),
+            ]
+    )
 
 
-    # -------------------------
-    # "Hardware Plated Zinc"
-    # -------------------------
 
-    if True:
-        query_name = "Hardware [PLATED.ZINC]"
-        # Add the query here:
-        zinc = objQueries.Add(query_name)
-        zinc.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        zinc.SearchSubassemblies = False
-
-        # Add Criteria to above query
-        zinc.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add a second criteria
-        zinc.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "DSC_A",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "ZINC PLATED",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, zinc.MatchesCount.ToString()))
-
-
-    # -------------------------
-    #  "Hardware [SS]"
-    # -------------------------
-
-    if True:
-        query_name = "Hardware [SS]"
-        # Add the query here:
-        ss = objQueries.Add("Hardware [SS]")
-        ss.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        ss.SearchSubassemblies = False
-
-        # Add Criteria to above query
-        ss.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add Criteria to above query
-        ss.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "DSC_F",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "SS.3",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, zinc.MatchesCount.ToString()))
+    # "Reference"
+    create_query(
+            asm.Queries,
+            "Reference",
+            [
+                (seQueryPropertyReference, "Reference", seQueryConditionContains ,"HARDWARE"),
+            ]
+    )
+    # "Reference"
+    create_query(
+            asm.Queries,
+            "Reference",
+            [
+                (seQueryPropertyReference, "Reference", seQueryConditionContains ,"HARDWARE"),
+            ]
+    )
+    # "Reference"
+    create_query(
+            asm.Queries,
+            "Reference",
+            [
+                (seQueryPropertyReference, "Reference", seQueryConditionContains ,"HARDWARE"),
+            ]
+    )
 
 
-    # -------------------------
-    #  "Hardware [SS.304]"
-    # -------------------------
 
-    if True:
-        query_name = "Hardware [SS.304]"
-
-        ss304 = objQueries.Add(query_name)
-        ss304.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        ss304.SearchSubassemblies = False
-
-        ss304.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add Criteria to above query
-        ss304.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "DSC_F",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "[SS.304]",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, ss304.MatchesCount.ToString()))
-
-
-    # -------------------------
-    #  "Hardware [SS.316]"
-    # -------------------------
-
-    if True:
-        query_name = "Hardware [SS.316]"
-        # Add the query here:
-        ss316 = objQueries.Add(query_name)
-        ss316.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        ss316.SearchSubassemblies = False
-
-        ss316.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add Criteria to above query
-        ss316.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "DSC_F",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "[SS.316]",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, ss316.MatchesCount.ToString()))
-
-
-    # -------------------------
-    #  "Hardware Imperial"
-    # -------------------------
-
-    if True:
-        query_name = "Hardware INCH"
-        imp = objQueries.Add(query_name)
-        imp.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        imp.SearchSubassemblies = False
-
-        # Add Criteria to above query
-        imp.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add Criteria to above query
-        imp.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "JDEPRP1",
-            SEAssembly.QueryConditionConstants.seQueryConditionIsNot,
-            "Metric Fastener",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, imp.MatchesCount.ToString()))
-
-
-    # -------------------------
-    #  "Hardware Metric"
-    # -------------------------
-
-    if True:
-        query_name = "Hardware METRIC"
-        metric = objQueries.Add(query_name)
-        metric.Scope = SEAssembly.QueryScopeConstants.seQueryScopeAllParts
-        metric.SearchSubassemblies = False
-
-        # Add Criteria to above query
-        metric.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCategory,
-            "Category",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "HARDWARE",
-        )
-        # Add Criteria to above query
-        metric.AddCriteria(
-            SEAssembly.QueryPropertyConstants.seQueryPropertyCustom,
-            "JDEPRP1",
-            SEAssembly.QueryConditionConstants.seQueryConditionContains,
-            "Metric Fastener",
-        )
-        print("[QUERY]: Created: {0:.<25}{1:.>10}".format(query_name, metric.MatchesCount.ToString()))
 # TODO: Add reference object
 # TODO: add non released items
 
 
 def confirmation(func):
-    response = raw_input("""Create fasteners queries? (Press y/[Y] to proceed.)""")
+    response = raw_input("""Create fasteners/reference queries? (Press y/[Y] to proceed.)""")
     if response.lower() not in ["y", "yes"]:
         print("Process canceled")
         sys.exit()
