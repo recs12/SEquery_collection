@@ -84,10 +84,9 @@ def create_various_queries(asm):
     create_query(asm.Queries, "Hardware INCH", [hardware.criterias, inch.criterias])
 
     # "Hardware METRIC"
-    metric = CriteriaProperties(
-        seQueryPropertyCustom, "JDEPRP1", seQueryConditionContains, "Metric Fastener"
-    )
-    create_query(asm.Queries, "Hardware METRIC", [hardware.criterias, metric.criterias])
+    metric = CriteriaProperties(seQueryPropertyCustom, "JDEPRP1", seQueryConditionContains, "Metric Fastener")
+    not_flat_washer = CriteriaProperties(seQueryPropertyCustom, "CATEGORY_VB", seQueryConditionIsNot, "FLAT WASHER")
+    create_query(asm.Queries, "Hardware METRIC", [hardware.criterias, metric.criterias, not_flat_washer.criterias])
 
     # REFERENCE QUERIES
     # ==================
