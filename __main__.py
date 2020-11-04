@@ -117,18 +117,7 @@ def create_various_queries(asm):
         [not_display_drawings.criterias],
     )
 
-    # "Reference [Displayed as Reference in Drawing Views]"
-    ref_drawings = CriteriaProperties(
-        seQueryPropertyReference,
-        "Reference",
-        seQueryConditionIs,
-        "Displayed as Reference in Drawing Views",
-    )
-    create_query(
-        asm.Queries,
-        "Reference [Displayed as Reference in Drawing Views]",
-        [ref_drawings.criterias],
-    )
+
 
     # MATERIAL QUERIES
     # ==================
@@ -138,6 +127,7 @@ def create_various_queries(asm):
         seQueryPropertyCustom, "JDEDSC1_A", seQueryConditionContains, "STEEL PLATE"
     )
     create_query(asm.Queries, "Material [STEEL PLATE]", [steel_plate.criterias])
+    # hi hi hi!
 
     # "SS.PLATE"
     ss_plate = CriteriaProperties(
