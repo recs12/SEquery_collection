@@ -127,6 +127,7 @@ def create_various_queries(asm):
         seQueryPropertyCustom, "JDEDSC1_A", seQueryConditionContains, "STEEL PLATE"
     )
     create_query(asm.Queries, "Material [STEEL PLATE]", [steel_plate.criterias])
+    # hi hi hi!
 
     # "SS.PLATE"
     ss_plate = CriteriaProperties(
